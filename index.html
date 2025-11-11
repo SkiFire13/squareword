@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> -->
+
+		<link rel="prefetch" href="./words.json" as="json">
+		<link rel="prefetch" href="./games.json" as="json">
+
+		<!-- Body -->
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                font-family: Roboto,-apple-system,Helvetica Neue,Helvetica,Arial,sans-serif;
+				touch-action: manipulation;
+            }
+        </style>
+
+		<!-- Game input -->
+		<style>
+			#game-input {
+				display: flex;
+				flex-direction: row;
+				gap: 1rem;
+				align-items: center;
+				justify-content: center;
+
+				margin: 3rem;
+			}
+
+			#game-input input {
+				background-clip: padding-box;
+				box-sizing: border-box;
+                box-shadow: 0 0 0 0.2rem black;
+				border-radius: 1rem;
+				border: none;
+				outline: none;
+
+				padding: 1rem;
+
+                height: 7rem;
+				font-size: 4rem;
+				text-align: center;
+			}
+
+			#game-input #game-id {
+				width: 20rem;
+				background-color: white;
+				-moz-appearance: textfield;
+			}
+
+			#game-input .game-input-button {
+				aspect-ratio: 1;
+				color: white;
+				background-color: #4caf50;
+			}
+		</style>
+
+		<!-- Table -->
+        <style>
+            .table {
+				display: grid;
+				grid-template-columns: repeat(6, 1fr);
+				grid-template-rows: repeat(6, 1fr);
+				gap: 10px;
+				padding-bottom: 3rem;
+				width: 100%;
+				max-width: 800px;
+            }
+
+            .table-cell {
+				aspect-ratio: 1;
+                box-shadow: 0 0 0 0.2rem black;
+                border-radius: 1rem;
+				background-clip: padding-box;
+                box-sizing: border-box;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                text-transform: uppercase;
+                word-break: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .table-guess:not(:empty) {
+                font-size: 4rem;
+                font-weight: 800;
+                background-color: #4caf50;
+                color: white;
+            }
+
+            .table-input {
+                font-size: 4rem;
+                font-weight: 700;
+                background-color: #e3f3fc;
+            }
+
+            .table-guesses {
+                font-size: 3rem;
+                font-weight: 700;
+                background-color: #1a73e8;
+                color: white;
+            }
+
+            .table-row-hints {
+                background-color: #f6d365;
+                font-size: 2.5rem;
+                font-weight: 900;
+                padding: 0.4rem;
+            }
+        </style>
+
+		<!-- Keyboard -->
+        <style>
+            .keyboard {
+                display: flex;
+                flex-direction: column;
+                gap: 0.7rem;
+				width: 100%;
+            }
+
+            .keyboard-row {
+                display: flex;
+				width: 100%;
+				flex: 1 1 0px;
+                justify-content: center;
+                gap: 0.7rem;
+            }
+
+            .key {
+                padding-top: 1.5rem;
+				padding-bottom: 1.5rem;
+				width: 0;
+				flex-grow: 1;
+
+                box-shadow: 0 0 0 0.2rem black;
+                border-radius: 1rem;
+				background-clip: padding-box;
+				background-color: white;
+                box-sizing: border-box;
+
+                border: none;
+                border-radius: 4px;
+                font-size: 3rem;
+                font-weight: bold;
+                cursor: pointer;
+
+                text-transform: uppercase;
+                transition: background-color 0.2s;
+            }
+
+			.key.wide {
+				flex-grow: 1.5;
+                min-width: 6rem;
+			}
+
+			.key-half-padding {
+				flex-grow: 0.5;
+                min-width: 2rem;
+			}
+
+            .key.correct {
+                background-color: #4caf50;
+            }
+
+            .key.present {
+                background-color: #f6d365;
+            }
+
+            .key.absent {
+                background-color: #bcbcbc;
+            }
+        </style>
+    </head>
+    <body>
+		<div id="game-input">
+			<input type="button" id="prev-game" class="game-input-button" value="&lt;" />
+			<input type="number" id="game-id" placeholder="Game ID" />
+			<input type="button" id="submit-game-id" class="game-input-button" value="✓" />
+			<input type="button" id="next-game" class="game-input-button" value="&gt;" />
+		</div>
+
+        <div class="table">
+			<div id="pending-guess-0" class="table-cell table-input"></div>
+			<div id="pending-guess-1" class="table-cell table-input"></div>
+			<div id="pending-guess-2" class="table-cell table-input"></div>
+			<div id="pending-guess-3" class="table-cell table-input"></div>
+			<div id="pending-guess-4" class="table-cell table-input"></div>
+			<div id="table-guesses" class="table-cell table-guesses"></div>
+
+			<div id="table-cell-00" class="table-cell table-guess"></div>
+			<div id="table-cell-01" class="table-cell table-guess"></div>
+			<div id="table-cell-02" class="table-cell table-guess"></div>
+			<div id="table-cell-03" class="table-cell table-guess"></div>
+			<div id="table-cell-04" class="table-cell table-guess"></div>
+			<div id="hint-0" class="table-cell table-row-hints"></div>
+			
+			<div id="table-cell-10" class="table-cell table-guess"></div>
+			<div id="table-cell-11" class="table-cell table-guess"></div>
+			<div id="table-cell-12" class="table-cell table-guess"></div>
+			<div id="table-cell-13" class="table-cell table-guess"></div>
+			<div id="table-cell-14" class="table-cell table-guess"></div>
+			<div id="hint-1" class="table-cell table-row-hints"></div>
+			
+			<div id="table-cell-20" class="table-cell table-guess"></div>
+			<div id="table-cell-21" class="table-cell table-guess"></div>
+			<div id="table-cell-22" class="table-cell table-guess"></div>
+			<div id="table-cell-23" class="table-cell table-guess"></div>
+			<div id="table-cell-24" class="table-cell table-guess"></div>
+			<div id="hint-2" class="table-cell table-row-hints"></div>
+			
+			<div id="table-cell-30" class="table-cell table-guess"></div>
+			<div id="table-cell-31" class="table-cell table-guess"></div>
+			<div id="table-cell-32" class="table-cell table-guess"></div>
+			<div id="table-cell-33" class="table-cell table-guess"></div>
+			<div id="table-cell-34" class="table-cell table-guess"></div>
+			<div id="hint-3" class="table-cell table-row-hints"></div>
+			
+			<div id="table-cell-40" class="table-cell table-guess"></div>
+			<div id="table-cell-41" class="table-cell table-guess"></div>
+			<div id="table-cell-42" class="table-cell table-guess"></div>
+			<div id="table-cell-43" class="table-cell table-guess"></div>
+			<div id="table-cell-44" class="table-cell table-guess"></div>
+			<div id="hint-4" class="table-cell table-row-hints"></div>
+        </div>
+
+        <div class="keyboard" id="keyboard">
+            <div class="keyboard-row">
+                <button id="key-Q" class="key" data-key="Q">Q</button>
+                <button id="key-W" class="key" data-key="W">W</button>
+                <button id="key-E" class="key" data-key="E">E</button>
+                <button id="key-R" class="key" data-key="R">R</button>
+                <button id="key-T" class="key" data-key="T">T</button>
+                <button id="key-Y" class="key" data-key="Y">Y</button>
+                <button id="key-U" class="key" data-key="U">U</button>
+                <button id="key-I" class="key" data-key="I">I</button>
+                <button id="key-O" class="key" data-key="O">O</button>
+                <button id="key-P" class="key" data-key="P">P</button>
+            </div>
+            <div class="keyboard-row">
+				<span class="key-half-padding"></span>
+                <button id="key-A" class="key" data-key="A">A</button>
+                <button id="key-S" class="key" data-key="S">S</button>
+                <button id="key-D" class="key" data-key="D">D</button>
+                <button id="key-F" class="key" data-key="F">F</button>
+                <button id="key-G" class="key" data-key="G">G</button>
+                <button id="key-H" class="key" data-key="H">H</button>
+                <button id="key-J" class="key" data-key="J">J</button>
+                <button id="key-K" class="key" data-key="K">K</button>
+                <button id="key-L" class="key" data-key="L">L</button>
+				<span class="key-half-padding"></span>
+            </div>
+            <div class="keyboard-row">
+                <button id="key-Enter" class="key wide" data-key="Enter">⏎</button>
+                <button id="key-Z" class="key" data-key="Z">Z</button>
+                <button id="key-X" class="key" data-key="X">X</button>
+                <button id="key-C" class="key" data-key="C">C</button>
+                <button id="key-V" class="key" data-key="V">V</button>
+                <button id="key-B" class="key" data-key="B">B</button>
+                <button id="key-N" class="key" data-key="N">N</button>
+                <button id="key-M" class="key" data-key="M">M</button>
+                <button id="key-Backspace" class="key wide" data-key="Backspace">⌫</button>
+            </div>
+        </div>
+
+        <script>
+            async function loadWords() {
+				const re = await fetch("./words.json");
+				const list = await re.json();
+				return new Set(list);
+            }
+
+            async function loadGames() {
+				const re = await fetch("./games.json");
+				return await re.json();
+            }
+
+			async function play() {
+				const [words, games] = await Promise.all([loadWords(), loadGames()]);
+
+				const game = {};
+
+				const cellIsCorrect = (i, j) => game.guesses.some(guess => guess.charAt(j) == game.solution[i].charAt(j));
+				const cellIsHint = (i, j) => game.guesses.some(guess => guess.includes(game.solution[i].charAt(j)));
+
+				game.id = parseInt(window.localStorage.getItem("last_game_id") ?? "0");
+				setGame(game.id);
+
+				function updateUI() {
+					for (let i = 0; i < 5; i++) {
+						document.getElementById(`pending-guess-${i}`).innerText = game.pendingGuess.charAt(i);
+					}
+
+					document.getElementById(`table-guesses`).innerText = `${game.guesses.length}`;
+
+					const anyHint = new Set();
+					const anySuccess = new Set();
+					const tried = new Set(game.guesses.flat());
+
+					for (let i = 0; i < 5; i++) {
+						const hints = new Set();
+						for (let j = 0; j < 5; j++) {
+							const cell = document.getElementById(`table-cell-${i}${j}`);
+							if (cellIsCorrect(i, j)) {
+								cell.innerText = game.solution[i].charAt(j);
+								anySuccess.add(game.solution[i].charAt(j));
+							} else {
+								cell.innerText = "";
+								if (cellIsHint(i, j)) {
+									hints.add(game.solution[i].charAt(j));
+									anyHint.add(game.solution[i].charAt(j));
+								}
+							}
+						}
+						document.getElementById(`hint-${i}`).innerText = Array.from(hints).sort().join("");
+					}
+
+					for (const c of "ABCDEFGHJKLMNOPQRSTUVWXYZ") {
+						const e = document.getElementById(`key-${c}`);
+						const classToSet = anyHint.has(c) ? "present" : anySuccess.has(c) ? "correct" : tried.has(c) ? "absent" : "normal";
+
+						for(const clazz of ["present", "correct", "absent", "normal"]) {
+							if (clazz == classToSet) {
+								e.classList.add(clazz);
+							} else {
+								e.classList.remove(clazz);
+							}
+						}
+					}
+				}
+
+				updateUI();
+
+				// Keyboard click events
+				document.getElementById('keyboard').addEventListener('click', (e) => {
+					if (e.target.classList.contains('key')) {
+						const key = e.target.dataset.key;
+						handleKey(key);
+					}
+				});
+
+				// Physical keyboard events
+				document.addEventListener('keydown', (e) => {
+					if (game.gameOver) return;
+
+					if (e.key === 'Enter') {
+						handleKey('Enter');
+					} else if (e.key === 'Backspace') {
+						handleKey('Backspace');
+					} else if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
+						handleKey(e.key.toUpperCase());
+					}
+				});
+
+				function handleKey(key) {
+					if (game.gameOver) return;
+
+					if (key === 'Enter') {
+						submitGuess();
+					} else if (key === 'Backspace') {
+						deleteLetter();
+					} else {
+						addLetter(key);
+					}
+				}
+
+				function submitGuess() {
+					if (game.pendingGuess.length != 5) {
+						// TODO: Toast not long enough
+						return;
+					}
+
+					if (!words.has(game.pendingGuess.toLowerCase())) {
+						// TODO: Toast not long enough
+						return;
+					}
+
+					game.guesses.push(game.pendingGuess);
+					game.pendingGuess = "";
+					game.gameOver = checkWin();
+
+					window.localStorage.setItem(`pending-guess-${game.id}`, game.pendingGuess);
+					window.localStorage.setItem(`guesses-${game.id}`, JSON.stringify(game.guesses));
+
+					updateUI();
+				}
+
+				function deleteLetter() {
+					game.pendingGuess = game.pendingGuess.slice(0, -1);
+					updateUI();
+				}
+
+				function addLetter(key) {
+					if (!key.match(/[A-Z]/)) {
+						return;
+					}
+
+					if (game.pendingGuess.length < 5) {
+						game.pendingGuess += key.toUpperCase();
+						window.localStorage.setItem("last_pending_guess", game.pendingGuess);
+					}
+
+					updateUI();
+				}
+
+				function checkWin() {
+					for(let i = 0; i < 5; i++) {
+						for (let j = 0; j < 5; j++) {
+							if (!cellIsCorrect(i, j)) {
+								return false;
+							}
+						}
+					}
+					return true;
+				}
+
+				function loadSolution(gameId) {
+					const sol = games[gameId].toUpperCase();
+					return [
+						sol.slice(0, 5),
+						sol.slice(5, 10),
+						sol.slice(10, 15),
+						sol.slice(15, 20),
+						sol.slice(20, 25)
+					];
+				}
+
+				function setGame(newGameId) {
+					if (newGameId === null || newGameId === undefined || isNaN(newGameId)) return;
+
+					game.id = newGameId;
+					game.pendingGuess = window.localStorage.getItem(`pending-guess-${game.id}`) ?? "";
+					game.guesses = JSON.parse(window.localStorage.getItem(`guesses-${game.id}`) ?? "[]");
+					game.solution = loadSolution(game.id);
+					game.gameOver = checkWin();
+
+					window.localStorage.setItem("last_game_id", game.id);
+					window.localStorage.setItem("last_pending_guess", game.pendingGuess);
+					window.localStorage.setItem("last_guesses", JSON.stringify(game.guesses));
+
+					document.getElementById("game-id").value = game.id;
+					updateUI();
+				}
+
+				document.getElementById("submit-game-id").addEventListener('click', (e) => {
+					setGame(parseInt(document.getElementById("game-id").value));
+				});
+
+				document.getElementById("prev-game").addEventListener('click', (e) => {
+					if (game.id == 0) return;
+					setGame(game.id - 1);
+				});
+
+				document.getElementById("next-game").addEventListener('click', (e) => {
+					if (game.id + 1 >= games.length) return;
+					setGame(game.id + 1);
+				});
+			}
+
+			play();
+        </script>
+    </body>
+</html>
