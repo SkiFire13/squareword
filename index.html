@@ -75,7 +75,7 @@
 
 		<!-- Table -->
         <style>
-            .table {
+            #table {
 				display: grid;
 				grid-template-columns: repeat(6, 1fr);
 				grid-template-rows: repeat(6, 1fr);
@@ -157,11 +157,12 @@
 
 		<!-- Keyboard -->
         <style>
-            .keyboard {
+            #keyboard {
                 display: flex;
                 flex-direction: column;
                 gap: 0.7rem;
 				width: 100%;
+				margin-bottom: 3rem;
             }
 
             .keyboard-row {
@@ -223,6 +224,19 @@
                 background-color: #bcbcbc;
             }
         </style>
+
+		<!-- Guesses -->
+		<style>
+            #guesses {
+				display: grid;
+				grid-template-columns: repeat(5, 1fr);
+				grid-template-rows: repeat(5, 1fr);
+				gap: 1.2em;
+				padding-bottom: 3rem;
+				width: 100%;
+				max-width: 700px;
+            }
+		</style>
     </head>
     <body>
 		<div id="game-input">
@@ -232,7 +246,7 @@
 			<button id="next-game" class="game-input-button"><span class="material-symbols-outlined">chevron_forward</span></button>
 		</div>
 
-        <div class="table">
+        <div id="table">
 			<div id="pending-guess-0" class="table-cell table-cell-0 table-input"></div>
 			<div id="pending-guess-1" class="table-cell table-cell-0 table-input"></div>
 			<div id="pending-guess-2" class="table-cell table-cell-0 table-input"></div>
@@ -276,7 +290,7 @@
 			<div id="hint-4" class="table-cell table-cell-5 table-row-hints"></div>
         </div>
 
-        <div class="keyboard" id="keyboard">
+        <div id="keyboard">
             <div class="keyboard-row">
                 <button id="key-Q" class="key" data-key="Q">Q</button>
                 <button id="key-W" class="key" data-key="W">W</button>
@@ -314,6 +328,8 @@
                 <button id="key-Backspace" class="key wide" data-key="Backspace"><span class="material-symbols-outlined">backspace</span></button>
             </div>
         </div>
+		
+		<div id="guesses"></div>
 
         <script>
             async function loadWords() {
@@ -380,6 +396,17 @@
 							} else {
 								e.classList.remove(clazz);
 							}
+						}
+					}
+
+					const guessesDiv = document.getElementById("guesses");
+					guessesDiv.replaceChildren();
+					for(const guess of game.guesses) {
+						for(const l of guess) {
+							const div = document.createElement("div");
+							div.classList.add("table-cell", "table-input");
+							div.innerText = l;
+							guessesDiv.append(div);
 						}
 					}
 				}
