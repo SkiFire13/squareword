@@ -56,7 +56,7 @@
 			}
 
 			#game-input #game-id {
-				width: 20rem;
+				width: 15rem;
 				background-color: white;
 				-moz-appearance: textfield;
 			}
@@ -162,7 +162,7 @@
                 flex-direction: column;
                 gap: 0.7rem;
 				width: 100%;
-				margin-bottom: 3rem;
+				margin-bottom: 10rem;
             }
 
             .keyboard-row {
@@ -241,6 +241,8 @@
     <body>
 		<div id="game-input">
 			<button id="prev-game" class="game-input-button"><span class="material-symbols-outlined">chevron_backward</span></button>
+			<input id="date-picker-game" type="date" hidden>
+			<button id="calendar-game" class="game-input-button"><span class="material-symbols-outlined">calendar_month</span></button>
 			<input type="number" id="game-id" placeholder="Game ID" />
 			<button id="submit-game-id" class="game-input-button"><span class="material-symbols-outlined">check</span></button>
 			<button id="next-game" class="game-input-button"><span class="material-symbols-outlined">chevron_forward</span></button>
@@ -414,11 +416,8 @@
 				updateUI();
 
 				// Keyboard click events
-				document.getElementById('keyboard').addEventListener('click', (e) => {
-					if (e.target.classList.contains('key')) {
-						const key = e.target.dataset.key;
-						handleKey(key);
-					}
+				Array.from(document.getElementsByClassName('key')).forEach(e => {
+					e.addEventListener('click', () => handleKey(e.dataset.key));
 				});
 
 				// Physical keyboard events
@@ -437,6 +436,17 @@
 				function handleKey(key) {
 					if (game.gameOver) return;
 
+					const animationTumbling = [
+						{ transform: "scale(1, 1)" },
+						{ transform: "scale(0.8, 0.8)" },
+						{ transform: "scale(1, 1)" }
+					];
+					const animationTiming = {
+						duration: 150,
+						iterations: 1
+					};
+					document.getElementById(`key-${key}`).animate(animationTumbling, animationTiming);
+
 					if (key === 'Enter') {
 						submitGuess();
 					} else if (key === 'Backspace') {
@@ -448,12 +458,25 @@
 
 				function submitGuess() {
 					if (game.pendingGuess.length != 5) {
-						// TODO: Toast not long enough
 						return;
 					}
 
 					if (!words.has(game.pendingGuess.toLowerCase())) {
-						// TODO: Toast not long enough
+						const animationTumbling = [
+							{ transform: "translateX(0rem)" },
+							{ transform: "translateX(-1rem)" },
+							{ transform: "translateX(0rem)" },
+							{ transform: "translateX(1rem)" },
+							{ transform: "translateX(0rem)" }
+						];
+						const animationTiming = {
+							duration: 150,
+							iterations: 1
+						};
+						for(let i = 0; i < 5; i++) {
+							document.getElementById(`pending-guess-${i}`).animate(animationTumbling, animationTiming);
+						}
+
 						return;
 					}
 
@@ -539,6 +562,9 @@
 					window.localStorage.setItem("last_guesses", JSON.stringify(game.guesses));
 
 					document.getElementById("game-id").value = game.id;
+					const date = new Date((game.id + 19023) * (1000 * 60 * 60 * 24));
+					document.getElementById("date-picker-game").value = `${date.getUTCFullYear()}-${date.getUTCMonth}-${date.getUTCDate()}`;
+					
 					updateUI();
 				}
 
@@ -554,6 +580,15 @@
 				document.getElementById("next-game").addEventListener('click', (e) => {
 					if (game.id + 1 >= games.length) return;
 					setGame(game.id + 1);
+				});
+
+				document.getElementById("calendar-game").addEventListener('click', (e) => {
+					document.getElementById("date-picker-game").showPicker();
+				});
+
+				document.getElementById("date-picker-game").addEventListener('input', (e) => {
+					const val = document.getElementById("date-picker-game").value;
+					setGame(Date.parse(val) / (1000 * 60 * 60 * 24) - 19023)
 				});
 			}
 
