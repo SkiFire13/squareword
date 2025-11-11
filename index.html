@@ -2,10 +2,20 @@
 <html>
     <head>
 		<meta charset="UTF-8">
-		<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/> -->
-
 		<link rel="prefetch" href="./words.json" as="json">
 		<link rel="prefetch" href="./games.json" as="json">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+		<!-- Google Fonts -->
+		<style>
+			.material-symbols-outlined {
+				font-variation-settings:
+				'FILL' 0,
+				'wght' 400,
+				'GRAD' 0,
+				'opsz' 24
+			}
+		</style>
 
 		<!-- Body -->
         <style>
@@ -30,7 +40,7 @@
 				margin: 3rem;
 			}
 
-			#game-input input {
+			#game-input button, #game-input input {
 				background-clip: padding-box;
 				box-sizing: border-box;
                 box-shadow: 0 0 0 0.2rem black;
@@ -55,6 +65,11 @@
 				aspect-ratio: 1;
 				color: white;
 				background-color: #4caf50;
+				text-align: center;
+			}
+
+			.game-input-button span {
+				font-size: 5rem;
 			}
 		</style>
 
@@ -81,9 +96,10 @@
                 justify-content: center;
                 align-items: center;
 
+				text-align: center;
                 text-transform: uppercase;
-                word-break: break-word;
-                overflow-wrap: break-word;
+                word-break: break-all;
+                overflow-wrap: anywhere;
             }
 
             .table-guess:not(:empty) {
@@ -177,6 +193,14 @@
                 transition: background-color 0.2s;
             }
 
+			.key span {
+				transform: scale(2);
+				font-size: 2rem;
+				text-align: center;
+				margin: none;
+				margin-left: -0.1em;
+			}
+
 			.key.wide {
 				flex-grow: 1.5;
                 min-width: 6rem;
@@ -202,10 +226,10 @@
     </head>
     <body>
 		<div id="game-input">
-			<input type="button" id="prev-game" class="game-input-button" value="◀" />
+			<button id="prev-game" class="game-input-button"><span class="material-symbols-outlined">chevron_backward</span></button>
 			<input type="number" id="game-id" placeholder="Game ID" />
-			<input type="button" id="submit-game-id" class="game-input-button" value="✓" />
-			<input type="button" id="next-game" class="game-input-button" value="▶" />
+			<button id="submit-game-id" class="game-input-button"><span class="material-symbols-outlined">check</span></button>
+			<button id="next-game" class="game-input-button"><span class="material-symbols-outlined">chevron_forward</span></button>
 		</div>
 
         <div class="table">
@@ -279,7 +303,7 @@
 				<span class="key-half-padding"></span>
             </div>
             <div class="keyboard-row">
-                <button id="key-Enter" class="key wide" data-key="Enter">⏎</button>
+                <button id="key-Enter" class="key wide" data-key="Enter"><span class="material-symbols-outlined">subdirectory_arrow_left</span></button>
                 <button id="key-Z" class="key" data-key="Z">Z</button>
                 <button id="key-X" class="key" data-key="X">X</button>
                 <button id="key-C" class="key" data-key="C">C</button>
@@ -287,7 +311,7 @@
                 <button id="key-B" class="key" data-key="B">B</button>
                 <button id="key-N" class="key" data-key="N">N</button>
                 <button id="key-M" class="key" data-key="M">M</button>
-                <button id="key-Backspace" class="key wide" data-key="Backspace">⌫</button>
+                <button id="key-Backspace" class="key wide" data-key="Backspace"><span class="material-symbols-outlined">backspace</span></button>
             </div>
         </div>
 
@@ -323,7 +347,7 @@
 
 					const anyHint = new Set();
 					const anySuccess = new Set();
-					const tried = new Set(game.guesses.flat());
+					const tried = new Set(game.guesses.join(""));
 
 					for (let i = 0; i < 5; i++) {
 						const hints = new Set();
@@ -343,9 +367,12 @@
 						document.getElementById(`hint-${i}`).innerText = Array.from(hints).sort().join("");
 					}
 
-					for (const c of "ABCDEFGHJKLMNOPQRSTUVWXYZ") {
+					for (const c of "ABCDEFGHIJKLMNOPQRSTUVWXYZ") {
 						const e = document.getElementById(`key-${c}`);
-						const classToSet = anyHint.has(c) ? "present" : anySuccess.has(c) ? "correct" : tried.has(c) ? "absent" : "normal";
+						const classToSet = anyHint.has(c) ? "present"
+							: anySuccess.has(c) ? "correct"
+							: tried.has(c) ? "absent"
+							: "normal";
 
 						for(const clazz of ["present", "correct", "absent", "normal"]) {
 							if (clazz == classToSet) {
