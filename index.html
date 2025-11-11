@@ -56,31 +56,6 @@
 				color: white;
 				background-color: #4caf50;
 			}
-
-			#table-cell-00, #table-cell-01, #table-cell-02, #table-cell-03, #table-cell-04 {
-				transition: background-color 150ms;
-				transition-delay: 75ms;
-			}
-
-			#table-cell-10, #table-cell-11, #table-cell-12, #table-cell-13, #table-cell-14 {
-				transition: background-color 150ms;
-				transition-delay: 225ms;
-			}
-
-			#table-cell-20, #table-cell-21, #table-cell-22, #table-cell-23, #table-cell-24 {
-				transition: background-color 150ms;
-				transition-delay: 375ms;
-			}
-
-			#table-cell-30, #table-cell-31, #table-cell-32, #table-cell-33, #table-cell-34 {
-				transition: background-color 150ms;
-				transition-delay: 525ms;
-			}
-
-			#table-cell-40, #table-cell-41, #table-cell-42, #table-cell-43, #table-cell-44 {
-				transition: background-color 150ms;
-				transition-delay: 675ms;
-			}
 		</style>
 
 		<!-- Table -->
@@ -89,7 +64,7 @@
 				display: grid;
 				grid-template-columns: repeat(6, 1fr);
 				grid-template-rows: repeat(6, 1fr);
-				gap: 10px;
+				gap: 1.2em;
 				padding-bottom: 3rem;
 				width: 100%;
 				max-width: 800px;
@@ -137,6 +112,31 @@
                 font-weight: 900;
                 padding: 0.4rem;
             }
+
+			.table-guess.table-cell-1 {
+				transition: background-color 150ms;
+				transition-delay: 75ms;
+			}
+
+			.table-guess.table-cell-2 {
+				transition: background-color 150ms;
+				transition-delay: 225ms;
+			}
+
+			.table-guess.table-cell-3 {
+				transition: background-color 150ms;
+				transition-delay: 375ms;
+			}
+
+			.table-guess.table-cell-4 {
+				transition: background-color 150ms;
+				transition-delay: 525ms;
+			}
+
+			.table-guess.table-cell-5 {
+				transition: background-color 150ms;
+				transition-delay: 675ms;
+			}
         </style>
 
 		<!-- Keyboard -->
@@ -210,47 +210,47 @@
 		</div>
 
         <div class="table">
-			<div id="pending-guess-0" class="table-cell table-input"></div>
-			<div id="pending-guess-1" class="table-cell table-input"></div>
-			<div id="pending-guess-2" class="table-cell table-input"></div>
-			<div id="pending-guess-3" class="table-cell table-input"></div>
-			<div id="pending-guess-4" class="table-cell table-input"></div>
-			<div id="table-guesses" class="table-cell table-guesses"></div>
+			<div id="pending-guess-0" class="table-cell table-cell-0 table-input"></div>
+			<div id="pending-guess-1" class="table-cell table-cell-0 table-input"></div>
+			<div id="pending-guess-2" class="table-cell table-cell-0 table-input"></div>
+			<div id="pending-guess-3" class="table-cell table-cell-0 table-input"></div>
+			<div id="pending-guess-4" class="table-cell table-cell-0 table-input"></div>
+			<div id="table-guesses" class="table-cell table-cell-0 table-guesses"></div>
 
-			<div id="table-cell-00" class="table-cell table-guess"></div>
-			<div id="table-cell-01" class="table-cell table-guess"></div>
-			<div id="table-cell-02" class="table-cell table-guess"></div>
-			<div id="table-cell-03" class="table-cell table-guess"></div>
-			<div id="table-cell-04" class="table-cell table-guess"></div>
-			<div id="hint-0" class="table-cell table-row-hints"></div>
+			<div id="table-cell-00" class="table-cell table-cell-1 table-guess"></div>
+			<div id="table-cell-01" class="table-cell table-cell-1 table-guess"></div>
+			<div id="table-cell-02" class="table-cell table-cell-1 table-guess"></div>
+			<div id="table-cell-03" class="table-cell table-cell-1 table-guess"></div>
+			<div id="table-cell-04" class="table-cell table-cell-1 table-guess"></div>
+			<div id="hint-0" class="table-cell table-cell-1 table-row-hints"></div>
 			
-			<div id="table-cell-10" class="table-cell table-guess"></div>
-			<div id="table-cell-11" class="table-cell table-guess"></div>
-			<div id="table-cell-12" class="table-cell table-guess"></div>
-			<div id="table-cell-13" class="table-cell table-guess"></div>
-			<div id="table-cell-14" class="table-cell table-guess"></div>
-			<div id="hint-1" class="table-cell table-row-hints"></div>
+			<div id="table-cell-10" class="table-cell table-cell-2 table-guess"></div>
+			<div id="table-cell-11" class="table-cell table-cell-2 table-guess"></div>
+			<div id="table-cell-12" class="table-cell table-cell-2 table-guess"></div>
+			<div id="table-cell-13" class="table-cell table-cell-2 table-guess"></div>
+			<div id="table-cell-14" class="table-cell table-cell-2 table-guess"></div>
+			<div id="hint-1" class="table-cell table-cell-2 table-row-hints"></div>
 			
-			<div id="table-cell-20" class="table-cell table-guess"></div>
-			<div id="table-cell-21" class="table-cell table-guess"></div>
-			<div id="table-cell-22" class="table-cell table-guess"></div>
-			<div id="table-cell-23" class="table-cell table-guess"></div>
-			<div id="table-cell-24" class="table-cell table-guess"></div>
-			<div id="hint-2" class="table-cell table-row-hints"></div>
+			<div id="table-cell-20" class="table-cell table-cell-3 table-guess"></div>
+			<div id="table-cell-21" class="table-cell table-cell-3 table-guess"></div>
+			<div id="table-cell-22" class="table-cell table-cell-3 table-guess"></div>
+			<div id="table-cell-23" class="table-cell table-cell-3 table-guess"></div>
+			<div id="table-cell-24" class="table-cell table-cell-3 table-guess"></div>
+			<div id="hint-2" class="table-cell table-cell-3 table-row-hints"></div>
 			
-			<div id="table-cell-30" class="table-cell table-guess"></div>
-			<div id="table-cell-31" class="table-cell table-guess"></div>
-			<div id="table-cell-32" class="table-cell table-guess"></div>
-			<div id="table-cell-33" class="table-cell table-guess"></div>
-			<div id="table-cell-34" class="table-cell table-guess"></div>
-			<div id="hint-3" class="table-cell table-row-hints"></div>
+			<div id="table-cell-30" class="table-cell table-cell-4 table-guess"></div>
+			<div id="table-cell-31" class="table-cell table-cell-4 table-guess"></div>
+			<div id="table-cell-32" class="table-cell table-cell-4 table-guess"></div>
+			<div id="table-cell-33" class="table-cell table-cell-4 table-guess"></div>
+			<div id="table-cell-34" class="table-cell table-cell-4 table-guess"></div>
+			<div id="hint-3" class="table-cell table-cell-4 table-row-hints"></div>
 			
-			<div id="table-cell-40" class="table-cell table-guess"></div>
-			<div id="table-cell-41" class="table-cell table-guess"></div>
-			<div id="table-cell-42" class="table-cell table-guess"></div>
-			<div id="table-cell-43" class="table-cell table-guess"></div>
-			<div id="table-cell-44" class="table-cell table-guess"></div>
-			<div id="hint-4" class="table-cell table-row-hints"></div>
+			<div id="table-cell-40" class="table-cell table-cell-5 table-guess"></div>
+			<div id="table-cell-41" class="table-cell table-cell-5 table-guess"></div>
+			<div id="table-cell-42" class="table-cell table-cell-5 table-guess"></div>
+			<div id="table-cell-43" class="table-cell table-cell-5 table-guess"></div>
+			<div id="table-cell-44" class="table-cell table-cell-5 table-guess"></div>
+			<div id="hint-4" class="table-cell table-cell-5 table-row-hints"></div>
         </div>
 
         <div class="keyboard" id="keyboard">
