@@ -56,6 +56,31 @@
 				color: white;
 				background-color: #4caf50;
 			}
+
+			#table-cell-00, #table-cell-01, #table-cell-02, #table-cell-03, #table-cell-04 {
+				transition: background-color 150ms;
+				transition-delay: 75ms;
+			}
+
+			#table-cell-10, #table-cell-11, #table-cell-12, #table-cell-13, #table-cell-14 {
+				transition: background-color 150ms;
+				transition-delay: 225ms;
+			}
+
+			#table-cell-20, #table-cell-21, #table-cell-22, #table-cell-23, #table-cell-24 {
+				transition: background-color 150ms;
+				transition-delay: 375ms;
+			}
+
+			#table-cell-30, #table-cell-31, #table-cell-32, #table-cell-33, #table-cell-34 {
+				transition: background-color 150ms;
+				transition-delay: 525ms;
+			}
+
+			#table-cell-40, #table-cell-41, #table-cell-42, #table-cell-43, #table-cell-44 {
+				transition: background-color 150ms;
+				transition-delay: 675ms;
+			}
 		</style>
 
 		<!-- Table -->
@@ -387,6 +412,24 @@
 					window.localStorage.setItem(`guesses-${game.id}`, JSON.stringify(game.guesses));
 
 					updateUI();
+
+					for(let i = 0; i < 5; i++) {
+						for(let j = 0; j < 5; j++) {
+							const animationTumbling = [
+								{ transform: "scale(1, 1)" },
+								{ transform: "scale(1.1, 1.1)" },
+								{ transform: "scale(1, 1)" }
+							];
+
+							const animationTiming = {
+								duration: 500,
+								iterations: 1,
+								delay: 150 * i
+							};
+
+							document.getElementById(`table-cell-${i}${j}`).animate(animationTumbling, animationTiming);
+						}
+					}
 				}
 
 				function deleteLetter() {
